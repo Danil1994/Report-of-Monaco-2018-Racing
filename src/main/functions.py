@@ -1,88 +1,75 @@
 import datetime
 
-from task_6_danil_shvecov.exception import FileDoesNotExist
+from src.main.exception import FileDoesNotExist
 
 
-def read_file(file_name: str) -> dict:
-    """create dict{abb:[time]...}"""
-    dict_ = {}
+def read_file(file_name: str) -> str:
     try:
         with open(file_name, 'r') as file_:
-            for line in file_:
-                dict_[line[:3]] = [line[3:26]]
-            return dict_
+            return file_.read()
     except FileNotFoundError:
         raise FileDoesNotExist("Wrong path to the file.")
 
 
-def decoding_abbr(path='../data/abbreviations.txt') -> list:
-    """create dict [['DRR', 'Daniel Ricciardo', 'RED BULL RACING TAG HEUER\n']...]"""
-    try:
-        with open(path, 'r') as abbreviations:
-            abbr = []
-            for line in abbreviations:
-                abbr.append(line.split('_'))
-            return abbr
-    except FileNotFoundError:
-        raise FileDoesNotExist("ERROR: The specified file does not exist. Check spelling and try again")
+def abbr_and_time(file_: str) -> dict:
+    dict_: dict[{'ABBR': ['time']}] = {}
+    file_ = read_file(file_)
+    file_ = file_.split('\n')
+    for line in file_:
+        dict_[line[:3]] = [line[3:26]]
+    dict_.pop('')
+    return dict_
 
 
-def create_string_position(date_racer_about: dict) -> str:
-    """made great info string like 'Lewis Hamilton    |MERCEDES                      |0:06:47.540'
-                              from '['LHM', 'Lewis Hamilton', 'MERCEDES\n', '0:06:47.540000', 'LHM']' """
-    name = str(date_racer_about[1])
-    car = str(date_racer_about[2][:-1])
-    time = str(date_racer_about[3])
-    return name.ljust(18, ' ') + '|' + car.ljust(30, ' ') + '|' + time[:-3]
+def define_laps_time(start_finish: list) -> str:
+    start = datetime.datetime.strptime(start_finish[0], '%Y-%m-%d_%H:%M:%S.%f')
+    finish = datetime.datetime.strptime(start_finish[1], '%Y-%m-%d_%H:%M:%S.%f')
+    return str(finish - start)[:-3]
 
 
-def build_report(start='../data/start.log', finish='../data/end.log'):
-    """connect dict{abb:[start_time, finish_time]...}"""
-    list_abbr_and_time = read_file(start)
-    end_info = read_file(finish)
-    for abbr in list_abbr_and_time:
-        list_abbr_and_time[abbr].append(end_info[abbr][0])
-    # list_abbr_and_time ="'SVF': ['2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332']"
-
-    """define lap`s time {'SVF': '0:01:04.415000'...}"""
-    for racer in list_abbr_and_time:
-        list_abbr_and_time[racer].sort()  # check that finish time more than start time
-        start = datetime.datetime.strptime(list_abbr_and_time[racer][0], '%Y-%m-%d_%H:%M:%S.%f')
-        finish = datetime.datetime.strptime(list_abbr_and_time[racer][1], '%Y-%m-%d_%H:%M:%S.%f')
-        list_abbr_and_time[racer] = str(finish - start)
-    # list_abbr_and_time={'MES': '0:01:13.265000'}
-
-    """create table and SORT BY TIME [[lap`s time], [abbr]...]"""
-    table = []
-    for info in list_abbr_and_time:
-        table.append([list_abbr_and_time[info], info])
-    table.sort()
-
-    """connecting all info [['SVF', 'Sebastian Vettel', 'FERRARI\n', '0:01:04.415000', 'SVF']...]"""
-    abbr = decoding_abbr()
-    finish_table = []
-    for date in table:
-        for info in abbr:
-            if date[1] == info[0]:
-                info.extend(date)
-                finish_table.append(info)
-
-    """build full report"""
-    order = []
-    for racer in finish_table:
-        str_ = (str(finish_table.index(racer) + 1) + '.') + create_string_position(racer)
-        order.append(str_)
-    order.insert(15, '------------------------------------------------------------------')
-
-    return order
+def decoding_abbr(path: str) -> list:
+    abbr: dict["{'ABBR':['Name', 'Car']}"] = {}
+    abbreviations = read_file(path)
+    abbreviations = abbreviations.split('\n')
+    for line in abbreviations:
+        abbr[line[:3]] = line[4:].split('_')
+    abbr.popitem()
+    return abbr
 
 
-def print_report():
-    full_report = build_report()
-    for line in full_report:
-        print(line)
+def build_report(start: str, finish: str, abbreviations: str) -> dict:
+    list_info: dict["{ABBR:[name, car, start_time, finish_time, laps_time]}"] = abbr_and_time(start)
+    end_info = abbr_and_time(finish)
+
+    for abbr in list_info:
+        list_info[abbr].append(end_info[abbr][0])
+        list_info[abbr].sort()
+        list_info[abbr].append(define_laps_time(list_info[abbr]))
+
+    decoder = decoding_abbr(abbreviations)
+    for abbr in decoder:
+        list_info[abbr].insert(0, decoder[abbr][1])
+        list_info[abbr].insert(0, decoder[abbr][0])
+
+    return list_info
 
 
-if __name__ == '__main__':
-    build_report()
-    print_report()
+def print_report(start: str, finish: str, abbreviations: str):
+    print(build_report(start, finish, abbreviations))
+
+
+def define_position(date_racer_about: dict) -> str:
+    position_list: list['time', 'abbr', 'position'] = []
+    place = 1
+    for abbr in date_racer_about:
+        date = [date_racer_about[abbr][-1], abbr]
+        position_list.append(date)
+        position_list.sort()
+
+    for info in position_list:
+        name, car = date_racer_about[info[1]][0], date_racer_about[info[1]][1]
+        position = str(place) + '.'
+        print(position.ljust(3, ' ') + name.ljust(18, ' ') + car.ljust(30, ' ') + ' ' + str(info[0]))
+        if place == 15:
+            print('---------------------------------------------------------------')
+        place += 1

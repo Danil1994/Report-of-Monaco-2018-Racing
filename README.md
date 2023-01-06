@@ -1,11 +1,15 @@
 # Shvecov_Danil`s_project
+
 + ### Python developer [Shvecov Danil](https://github.com/Danil1994)
 + ### Mentor [Divnich Andrii](https://github.com/DivnychAndrii)
+
 #### *Task from [foxminded](https://lms.foxminded.com.ua/) courses.*
 
-Install 
+Install
+
 1. Create a virtual environment and install task-6-danil-shvecov
-package from TestPyPI. Open terminal and run 
+   package from TestPyPI. Open terminal and run
+
 > Windows ```py -m pip install -i https://test.pypi.org/simple/ task-6-danil-shvecov```
 
 > Unix/macOS ```python3 -m pip install --index-url https://test.pypi.org/simple/ task-6-danil-shvecov```
@@ -20,39 +24,44 @@ Successfully installed task-6-danil-shvecov-0.0.1
 ```
 
 You can make sure that you have been installed this package. Open terminal
-and run 
+and run
 
->Windows py
-> 
-> Unix/macOS python 
-> 
+> Windows py
+>
+> Unix/macOS python
+>
 and import the package:
-```
-from task_6_danil_shvecov import create_string_position
-create_string_position(['LHM', 'Lewis Hamilton', 'MERCEDES\n', '0:06:47.540000', 'LHM'])
-=>  'Lewis Hamilton    |MERCEDES                      |0:06:47.540')
 
 ```
+from task_6_danil_shvecov import define_laps_time
+define_laps_time(['2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332'])
+ => '0:01:04.415'
 
-#### About program 
+```
 
-This package handle data about racers. 
-It reads data from files order racers by time and print report that
+#### About program
+
+This package handle data about racers.
+It reads data from files order racers by time and build, sort or print report that
 shows the top 15 racers and the rest after underline, for example:
+dafine_position(report):
 
-1. Daniel Ricciardo      | RED BULL RACING TAG HEUER     | 1:12.013
+1. Daniel Ricciardo | RED BULL RACING TAG HEUER | 1:12.013
 
-2. Sebastian Vettel      | FERRARI                                            | 1:12.415
+2. Sebastian Vettel | FERRARI | 1:12.415
 
 3. ...
 
 ------------------------------------------------------------------------
 
-16. Brendon Hartley   | SCUDERIA TORO ROSSO HONDA | 1:13.179
+16. Brendon Hartley | SCUDERIA TORO ROSSO HONDA | 1:13.179
 
-17. Marcus Ericsson  | SAUBER FERRARI                            | 1:13.265
+17. Marcus Ericsson | SAUBER FERRARI | 1:13.265
 
-**data** folder contain time data about racers.
+print_report(report):
+{'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332', '0:01:04.415']...
+
+**data**  its separate folder contain time data about racers.
 
 start.log contain start time (SVF2018-05-24_12:02:58.917)
 
@@ -61,37 +70,36 @@ end.log contain finish time (SVF2018-05-24_12:04:03.332)
 abbreviations.txt contain decoding information abbreviations racers about.
 (SVF_Sebastian Vettel_FERRARI)
 
-This files must be saved to the path task_6/src/data/
+You must use absolute path to the data-folder
 
 **main** folder contain main code.
+> *functions.py:*
+> def build_report(start, finish, abbreviations) main function builds order about racer
+> {'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332', '0:01:04.415']...
+>but not sort and not print it.
 
->*functions.py:*
->  def read_file(file_name) create dict like {abb:[time]...}
-> if user enter wrong path to the folder program raises except FileNotFoundError
+> def print_report(report) function prints order
 
->def decoding_abbr(path_to_the_folder) decoding abbr from abbreviations.txt
-> and create dict [['DRR', 'Daniel Ricciardo', 'RED BULL RACING TAG HEUER\n']...]
-> if user enter wrong path to the folder program raises except FileNotFoundError
+>def define_position(order) define racers position and print it
+1. Daniel Ricciardo | RED BULL RACING TAG HEUER | 1:12.013
 
->def create_string_position(date_racer_about) 
-> made great info string like 'Lewis Hamilton    |MERCEDES                      |0:06:47.540'
->
->from '['LHM', 'Lewis Hamilton', 'MERCEDES\n', '0:06:47.540000', 'LHM']'
+2. Sebastian Vettel | FERRARI | 1:12.415
 
-> def build_report(start, finish) main function builds order about racer
-> 1. Daniel Ricciardo      | RED BULL RACING TAG HEUER     | 1:12.013
->2. Sebastian Vettel      | FERRARI                                            | 1:12.415
->
->but doesn`t print it!
+3. ...
 
-> def print_report() function get result of "build_report" function and print in the main function
+------------------------------------------------------------------------
 
-**cli.py**` file handle commands from **CMD** 
+16. Brendon Hartley | SCUDERIA TORO ROSSO HONDA | 1:13.179
+
+17. Marcus Ericsson | SAUBER FERRARI | 1:13.265
+
+
+**cli.py**` file handle commands from **CMD**
 *python* cli.py --files <folder_path> --asc (print report) or --desc (print abbr name and car)
 
-*python* cli.py --files <folder_path> --driver “Sebastian Vettel”  shows statistic about driver
+*python* cli.py --files <folder_path> --driver “Sebastian Vettel” shows statistic about driver
 
-**!!!<folder_path> must be relative path!!!**
+**!!!<folder_path> must be absolute path!!!**
 
 If user input wrong command/path_to_the_file raise special except.
 

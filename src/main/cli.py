@@ -1,7 +1,8 @@
 import argparse
+import os.path
 
-from task_6_danil_shvecov.functions import build_report, decoding_abbr
-from task_6_danil_shvecov.exception import NotArgument
+from src.main.exception import NotArgument
+from src.main.functions import build_report
 
 
 def parser() -> str:
@@ -15,33 +16,37 @@ def parser() -> str:
     if obj.files is None:
         raise NotArgument("Use '--files' command and enter ptah to the file")
 
-    start = obj.files + '/start.log'
-    finish = obj.files + '/end.log'
-    order = build_report(start, finish)
+    def create_order():
+        start = os.path.join(obj.files, 'start.log')
+        finish = os.path.join(obj.files, 'end.log')
+        abbreviations = os.path.join(obj.files, 'abbreviations.txt')
+        return build_report(start, finish, abbreviations)
+
+    order = create_order()
+
+    def asc():
+        for line in order:
+            print(order[line])
 
     if obj.asc:
-        for line in order:
-            print(line)
+        asc()
+
+    def desc():
+        print('Abbr |   Name             |      Car\n''--------------------------------------------------------')
+        for info in order:
+            print(info.ljust(5, ' '), order[info][0].ljust(20, ' '), order[info][1])
 
     if obj.desc:
-        path = obj.files + '/abbreviations.txt'
-        info_list = decoding_abbr(path)
-        print(start, finish)
-        print('Abbr |   Name             |      Car\n''--------------------------------------------------------')
-        for info in info_list:
-            print(info[0].ljust(5, ' '), info[1].ljust(25, ' '), info[2])
+        desc()
+
+    def driver():
+        name = obj.driver
+        print('     Name            |   Car   |       Start time         |        Finish time       | Laps time\n'
+              '----------------------------------------------------------------------------------------------------')
+        for line in order:
+            if order[line][0] == name:
+                return order[line]
+        return "No info about this racer. Check that you used right name and try again"
 
     if obj.driver:
-        name = obj.driver
-        name = name.title()
-
-        print('№      Name         |     Car                      | Laps time\n'
-              '---------------------------------------------------------------')
-        for line in order:
-            if line.count(name):
-                return print(line)
-        print("No info about this racer. Check that you used right name and try again")
-
-
-if __name__ == '__main__':
-    parser()
+        print(driver())
