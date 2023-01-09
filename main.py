@@ -1,15 +1,11 @@
-from src.main.functions import build_report, define_position, print_report
-
+from src.main.cli import parser, asc, desc, driver, create_order
 
 if __name__ == '__main__':
-    build_report('C:/Users/38067/PycharmProjects/foxmind/data/start.log',
-                 'C:/Users/38067/PycharmProjects/foxmind/data//end.log',
-                 'C:/Users/38067/PycharmProjects/foxmind/data//abbreviations.txt')
-
-    define_position(build_report('C:/Users/38067/PycharmProjects/foxmind/data/start.log',
-                                 'C:/Users/38067/PycharmProjects/foxmind/data//end.log',
-                                 'C:/Users/38067/PycharmProjects/foxmind/data//abbreviations.txt'))
-
-    print_report('C:/Users/38067/PycharmProjects/foxmind/data/start.log',
-                 'C:/Users/38067/PycharmProjects/foxmind/data//end.log',
-                 'C:/Users/38067/PycharmProjects/foxmind/data//abbreviations.txt')
+    cli_command = parser()
+    order = create_order(cli_command)
+    if cli_command.asc:
+        asc(order)
+    if cli_command.desc:
+        desc(order)
+    if cli_command.driver:
+        driver(order, cli_command.driver)

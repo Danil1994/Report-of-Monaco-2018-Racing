@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "task_6_danil_shvecov"
-version = "0.1.2"
+version = "0.1.13"
 authors = [
   { name="Shvecov Danil", email="danilaleksandrovich36@gmail.com" },
 ]
@@ -18,7 +18,8 @@ classifiers = [
 ]
 
 [tool.hatch.build.sources]
-"src/main" = "task_6_danil_shvecov"
+"src/main" = "task_6"
+
 
 [project.urls]
 "Homepage" = "https://github.com/Danil1994/pypa/tree/main"

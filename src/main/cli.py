@@ -1,52 +1,45 @@
 import argparse
 import os.path
+from argparse import Namespace
 
-from src.main.exception import NotArgument
-from src.main.functions import build_report
+from .exception import NotArgument
+from .functions import build_report
 
 
-def parser() -> str:
+def parser() -> Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('--files', required=True)
     parser.add_argument('--asc', action='store_true')
     parser.add_argument('--desc', action='store_true')
     parser.add_argument('--driver')
-    obj = parser.parse_args()
+    return parser.parse_args()
 
+
+def create_order(obj: Namespace) -> dict:
     if obj.files is None:
         raise NotArgument("Use '--files' command and enter ptah to the file")
+    start = os.path.join(obj.files, 'start.log')
+    finish = os.path.join(obj.files, 'end.log')
+    abbreviations = os.path.join(obj.files, 'abbreviations.txt')
+    return build_report(start, finish, abbreviations)
 
-    def create_order():
-        start = os.path.join(obj.files, 'start.log')
-        finish = os.path.join(obj.files, 'end.log')
-        abbreviations = os.path.join(obj.files, 'abbreviations.txt')
-        return build_report(start, finish, abbreviations)
 
-    order = create_order()
+def asc(order: dict):
+    for line in order:
+        print(order[line])
 
-    def asc():
-        for line in order:
-            print(order[line])
 
-    if obj.asc:
-        asc()
+def desc(order: dict):
+    print('Abbr |   Name             |      Car\n''--------------------------------------------------------')
+    for info in order:
+        print(info.ljust(5, ' '), order[info][0].ljust(20, ' '), order[info][1])
 
-    def desc():
-        print('Abbr |   Name             |      Car\n''--------------------------------------------------------')
-        for info in order:
-            print(info.ljust(5, ' '), order[info][0].ljust(20, ' '), order[info][1])
 
-    if obj.desc:
-        desc()
-
-    def driver():
-        name = obj.driver
-        print('     Name            |   Car   |       Start time         |        Finish time       | Laps time\n'
-              '----------------------------------------------------------------------------------------------------')
-        for line in order:
-            if order[line][0] == name:
-                return order[line]
-        return "No info about this racer. Check that you used right name and try again"
-
-    if obj.driver:
-        print(driver())
+def driver(order: dict, name: str) -> str:
+    for line in order:
+        if order[line][0] == name:
+            print('     Name            |   Car   |       Start time         |        Finish time       | Laps time\n'
+                  '-------------------------------------------------------------------------------------------------\n',
+                  order[line])
+        else:
+            return "No info about this racer. Check that you used right name and try again"
