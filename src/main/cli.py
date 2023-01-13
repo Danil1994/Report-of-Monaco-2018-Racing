@@ -25,15 +25,17 @@ def create_info_dict(obj: Namespace) -> dict[str, list[str]]:
     return create_order(start, finish, abbreviations)
 
 
-def desc(order: dict) -> list[str]:
+def print_abb_name_car(order: dict):
     list_abb_name_car = ['ABB |' + ' Name' + ' ' * 14 + '|Car' + ' ' * 10 + '\n' + '-' * 55]
     for info in order:
         list_abb_name_car.append(info.ljust(5, ' ') + order[info][0].ljust(20, ' ') + order[info][1])
-    return list_abb_name_car
+    for abbr_name_car in list_abb_name_car:
+        print(abbr_name_car)
 
 
-def driver(order: dict, name: str) -> str:
+def print_driver(order: dict, name: str):
+    answer = "No info about this racer. Check that you used right name and try again"
     for abbr in order:
         if order[abbr][0] == name:
-            return order[abbr]
-    return "No info about this racer. Check that you used right name and try again"
+            answer = (order[abbr])
+    print(answer)

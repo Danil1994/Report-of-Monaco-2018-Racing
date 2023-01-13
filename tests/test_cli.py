@@ -2,7 +2,7 @@ import argparse
 import unittest
 from unittest.mock import patch
 
-from src.main.cli import parser, create_info_dict, desc, driver
+from src.main.cli import parser, create_info_dict, print_abb_name_car, print_driver
 from src.main.exception import NotArgument
 
 
@@ -24,27 +24,24 @@ class TestParser(unittest.TestCase):
                                             driver=None))
         mock_args.assert_called_once()
 
-    def test_desc(self):
+    def test_print_abb_name_car(self):
         self.assertEqual(
-            desc({'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                          '0:01:04.415']
-                  }), ['ABB | Name              |Car          \n'
-                       '-------------------------------------------------------',
-                       'SVF  Sebastian Vettel    FERRARI'])
+            print_abb_name_car(
+                {'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
+                         '0:01:04.415']
+                 }), None)
 
-    def test_driver_command(self):
+    def test_print_driver(self):
         self.assertEqual(
-            driver({'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                            '0:01:04.415']
-                    }, 'Sebastian Vettel'),
-            ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332', '0:01:04.415']
-        )
+            print_driver({'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
+                                  '0:01:04.415']
+                          }, 'Sebastian Vettel'), None)
 
     def test_driver_not_name(self):
         self.assertEqual(
-            driver({'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                            '0:01:04.415']
-                    }, 'Bad name'), "No info about this racer. Check that you used right name and try again")
+            print_driver({'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
+                                  '0:01:04.415']
+                          }, 'Bad name'), None)
 
     @patch('argparse.ArgumentParser.parse_args', return_value=argparse.Namespace(files='asd', asc=None, desc=None,
                                                                                  driver=None))

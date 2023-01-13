@@ -67,7 +67,7 @@ def create_order(start: str, end: str, abbreviations: str) -> dict[str, list[str
     return order
 
 
-def sort_order(date_racer_about: dict) -> list[str]:
+def print_sort_order(date_racer_about: dict):
     position_list = []
     for abbr in date_racer_about:
         date = [date_racer_about[abbr][-1], abbr]
@@ -83,4 +83,5 @@ def sort_order(date_racer_about: dict) -> list[str]:
         if place == 15:
             sorted_order.append('-'*63)
         place += 1
-    return sorted_order
+    for place_name_car_time in sorted_order:
+        print(place_name_car_time)

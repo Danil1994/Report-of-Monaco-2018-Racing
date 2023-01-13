@@ -3,7 +3,7 @@ from unittest.mock import patch, mock_open
 
 from src.main.exception import FileDoesNotExist
 from src.main.functions import read_file, abbr_and_time, \
-    sort_order, decoding_abbr, create_order, define_laps_time
+    print_sort_order, decoding_abbr, create_order, define_laps_time
 
 
 class TestFunc(unittest.TestCase):
@@ -42,6 +42,6 @@ class TestFunc(unittest.TestCase):
         mock_decoding.assert_called()
 
     def test_sort_order(self):
-        self.assertEqual(sort_order(
+        self.assertEqual(print_sort_order(
             {'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                     '0:01:04.415']}), ['1. Sebastian Vettel  FERRARI                        0:01:04.415'])
+                     '0:01:04.415']}), None)
