@@ -3,8 +3,7 @@ from unittest.mock import patch, mock_open
 
 from src.main.exception import FileDoesNotExist
 from src.main.functions import read_file, abbr_and_time, \
-    define_position, decoding_abbr, build_report, define_laps_time
-from src.main.functions import print_report
+    sort_order, decoding_abbr, create_order, define_laps_time
 
 
 class TestFunc(unittest.TestCase):
@@ -27,30 +26,22 @@ class TestFunc(unittest.TestCase):
     def test_decoding_abbr(self):
         self.assertEqual(decoding_abbr(['SVF_Sebastian Vettel_FERRARI\n']), {'SVF': ['Sebastian Vettel', 'FERRARI']})
 
-
     @patch('src.main.functions.read_file')
     @patch('src.main.functions.abbr_and_time')
     @patch('src.main.functions.all_time',
            return_value={'SVF': ['2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332', '0:01:04.415']})
     @patch('src.main.functions.decoding_abbr', return_value={'SVF': ['Sebastian Vettel', 'FERRARI']})
-    def test_build_report(self, mock_decoding, mock_all_time, mock_abbr_and_time, mock_read_file):
+    def test_create_order(self, mock_decoding, mock_all_time, mock_abbr_and_time, mock_read_file):
         mock_read_file.side_effect = ['SVF2018-05-24_12:02:58.917', 'SVF2018-05-24_12:04:03.332',
                                       'SVF_Sebastian Vettel_FERRARI']
         mock_abbr_and_time.side_effect = [{'SVF': ['2018-05-24_12:02:58.917']}, {'SVF': ['2018-05-24_12:04:03.332']}]
-        self.assertEqual(build_report(mock_read_file, mock_read_file, mock_read_file),
-                         {'SVF':['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                          '0:01:04.415']})
+        self.assertEqual(create_order(mock_read_file, mock_read_file, mock_read_file),
+                         {'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
+                                  '0:01:04.415']})
         mock_all_time.assert_called_once()
         mock_decoding.assert_called()
 
-    @patch('src.main.functions.build_report',
-           return_value={'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                                 '0:01:04.415']})
-    def test_print_report(self, mock_build_report):
-        self.assertEqual(print_report('start', 'finish', 'abbreviations'), None)
-        mock_build_report.assert_called_once()
-
-    def test_define_position(self):
-        self.assertEqual(define_position(
+    def test_sort_order(self):
+        self.assertEqual(sort_order(
             {'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                     '0:01:04.415']}), None)
+                     '0:01:04.415']}), ['1. Sebastian Vettel  FERRARI                        0:01:04.415'])
