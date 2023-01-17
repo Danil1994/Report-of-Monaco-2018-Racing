@@ -61,18 +61,19 @@ def create_order(start: str, end: str, abbreviations: str) -> dict[str, list[str
     abbr_and_all_time = all_time(start_info, end_info)
     order = {}
     for abbr in decoded_list:
-        all_racers_time = abbr_and_all_time[abbr]
+        all_time_racer = abbr_and_all_time[abbr]
         abbr_name_car = decoded_list[abbr]
-        order[abbr] = abbr_name_car + all_racers_time
+        order[abbr] = abbr_name_car + all_time_racer
     return order
 
 
-def print_sort_order(date_racer_about: dict):
+def sorting_order(date_racer_about: dict) -> list[str]:
     position_list = []
     for abbr in date_racer_about:
         date = [date_racer_about[abbr][-1], abbr]
         position_list.append(date)
     position_list.sort()
+
 
     place = 1
     sorted_order = []
@@ -81,7 +82,19 @@ def print_sort_order(date_racer_about: dict):
         position = str(place) + '.'
         sorted_order.append(position.ljust(3, ' ') + name.ljust(18, ' ') + car.ljust(30, ' ') + ' ' + str(info[0]))
         if place == 15:
-            sorted_order.append('-'*63)
+            sorted_order.append('-' * 63)
         place += 1
-    for place_name_car_time in sorted_order:
-        print(place_name_car_time)
+    return sorted_order
+
+
+def print_ascending(order: dict) -> print(str):
+    sort_order = sorting_order(order)
+    for position_name_car_laps_time in sort_order:
+        print(position_name_car_laps_time)
+
+
+def print_descending(order: dict) -> print(str):
+    sort_order = sorting_order(order)
+    sort_order.reverse()
+    for position_name_car_laps_time in sort_order:
+        print(position_name_car_laps_time)
