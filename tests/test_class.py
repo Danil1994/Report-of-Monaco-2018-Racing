@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch, mock_open
 
 from src.main.exception import FileDoesNotExist
-from src.main.functions import (read_file, abbr_and_time, decoding_abbr, create_order,
+from src.main.main_class import (read_file, abbr_and_time, decoding_abbr, create_order,
                                 define_laps_time, all_time, sorting_order, print_descending, print_ascending
                                 )
 
