@@ -14,14 +14,14 @@ def parser() -> Namespace:
     return cli_command.parse_args()
 
 
-def create_info_dict(file_path: str) -> list[object]:
+def create_list_object(file_path: str) -> list[object]:
     start = os.path.join(file_path, 'start.log')
     finish = os.path.join(file_path, 'end.log')
     abbreviations = os.path.join(file_path, 'abbreviations.txt')
     return create(start, finish, abbreviations)
 
 
-def find_driver(order: list[object], name) -> print(str):
+def find_driver(order: list[object], name) -> None:
     answer = None
     for driver in order:
         if driver.name == name:

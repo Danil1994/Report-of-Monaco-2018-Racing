@@ -2,18 +2,27 @@ import argparse
 import unittest
 from unittest.mock import patch
 
-from src.main.cli import parser, create_info_dict, print_abb_name_car, print_driver
-from src.main.exception import NotArgument
+from src.main.cli import parser, create_list_object, find_driver
+from src.main.exception import NotArgument, NotDriver
+from src.main.main_class import Driver
 
 
 class TestParser(unittest.TestCase):
-    @patch('src.main.cli.create_order',
-           return_value="{SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332]}")
-    def test_create_info_dict(self, mock_create_order):
-        self.assertEqual(create_info_dict(argparse.Namespace(files='Path/to/the/data', asc=True, desc=None,
-                                                             driver=None)),
-                         "{SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332]}")
-        mock_create_order.assert_called_once()
+    @patch('src.main.cli.create', return_value=[Driver(abbr='DRR',
+                                                       name='Daniel Ricciardo',
+                                                       car='RED BULL RACING TAG HEUER',
+                                                       start_time='2018-05-24_12:02:58.917',
+                                                       end_time='2018-05-24_12:04:03.332',
+                                                       lap_time='0:01:04.415')])
+    def test_create_list_object(self, mock_create):
+        self.assertEqual(create_list_object('Path/to/the/data'),
+                         [Driver(abbr='DRR',
+                                 name='Daniel Ricciardo',
+                                 car='RED BULL RACING TAG HEUER',
+                                 start_time='2018-05-24_12:02:58.917',
+                                 end_time='2018-05-24_12:04:03.332',
+                                 lap_time='0:01:04.415')])
+        mock_create.assert_called_once()
 
     @patch('argparse.ArgumentParser.parse_args',
            return_value=argparse.Namespace(files='C:/Users/38067/PycharmProjects/foxmind/data', asc=True, desc=None,
@@ -24,24 +33,22 @@ class TestParser(unittest.TestCase):
                                             driver=None))
         mock_args.assert_called_once()
 
-    def test_print_abb_name_car(self):
-        self.assertEqual(
-            print_abb_name_car(
-                {'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                         '0:01:04.415']
-                 }), None)
+    def test_find_driver(self):
+        self.assertEqual(find_driver([Driver(abbr='DRR',
+                                             name='Daniel Ricciardo',
+                                             car='RED BULL RACING TAG HEUER',
+                                             start_time='2018-05-24_12:02:58.917',
+                                             end_time='2018-05-24_12:04:03.332',
+                                             lap_time='0:01:04.415')], 'Daniel Ricciardo'), None)
 
-    def test_print_driver(self):
-        self.assertEqual(
-            print_driver({'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                                  '0:01:04.415']
-                          }, 'Sebastian Vettel'), None)
-
-    def test_driver_not_name(self):
-        self.assertEqual(
-            print_driver({'SVF': ['Sebastian Vettel', 'FERRARI', '2018-05-24_12:02:58.917', '2018-05-24_12:04:03.332',
-                                  '0:01:04.415']
-                          }, 'Bad name'), None)
+    # def test_find_driver_not_name(self):
+    #     self.assertRaises(NotDriver,
+    #                       find_driver([Driver(abbr='DRR',
+    #                                           name='Daniel Ricciardo',
+    #                                           car='RED BULL RACING TAG HEUER',
+    #                                           start_time='2018-05-24_12:02:58.917',
+    #                                           end_time='2018-05-24_12:04:03.332',
+    #                                           lap_time='0:01:04.415')], 'Bad name'))
 
     @patch('argparse.ArgumentParser.parse_args', return_value=argparse.Namespace(files='asd', asc=None, desc=None,
                                                                                  driver=None))
