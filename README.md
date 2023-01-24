@@ -93,16 +93,3 @@ You must use absolute path to the data-folder
 
 17. Marcus Ericsson | SAUBER FERRARI | 1:13.265
 
-
-**cli.py**` file handle commands from **CMD**
-*python* cli.py --files <folder_path> --asc (print report) or --desc (print abbr name and car)
-
-*python* cli.py --files <folder_path> --driver “Sebastian Vettel” shows statistic about driver
-
-**!!!<folder_path> must be absolute path!!!**
-
-If user input wrong command/path_to_the_file raise special except.
-
-**exception.py** file has all necessary exceptions.
-
-**tests** folder has all necessary basic tests for the checking code.
