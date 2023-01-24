@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import patch
 
 from src.main.cli import parser, create_list_object, find_driver
-from src.main.exception import NotArgument, NotDriver
+from src.main.exception import NotDriver
 from src.main.main_class import Driver
 
 
@@ -39,19 +39,14 @@ class TestParser(unittest.TestCase):
                                              car='RED BULL RACING TAG HEUER',
                                              start_time='2018-05-24_12:02:58.917',
                                              end_time='2018-05-24_12:04:03.332',
-                                             lap_time='0:01:04.415')], 'Daniel Ricciardo'), None)
+                                             lap_time='0:01:04.415')], 'Daniel Ricciardo'),
+                         'Daniel Ricciardo RED BULL RACING TAG HEUER 0:01:04.415')
 
-    # def test_find_driver_not_name(self):
-    #     self.assertRaises(NotDriver,
-    #                       find_driver([Driver(abbr='DRR',
-    #                                           name='Daniel Ricciardo',
-    #                                           car='RED BULL RACING TAG HEUER',
-    #                                           start_time='2018-05-24_12:02:58.917',
-    #                                           end_time='2018-05-24_12:04:03.332',
-    #                                           lap_time='0:01:04.415')], 'Bad name'))
-
-    @patch('argparse.ArgumentParser.parse_args', return_value=argparse.Namespace(files='asd', asc=None, desc=None,
-                                                                                 driver=None))
-    def test_wrong_path(self, mock_path):
-        self.assertRaises(NotArgument, msg="Use '--files' command")
-        mock_path.assert_not_called()
+    def test_find_driver_not_name(self):
+        self.assertRaises(NotDriver,
+                          find_driver, [Driver(abbr='DRR',
+                                               name='Daniel Ricciardo',
+                                               car='RED BULL RACING TAG HEUER',
+                                               start_time='2018-05-24_12:02:58.917',
+                                               end_time='2018-05-24_12:04:03.332',
+                                               lap_time='0:01:04.415')], 'Bad name')

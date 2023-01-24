@@ -1,10 +1,9 @@
-import pytest
 import unittest
 from unittest.mock import patch, mock_open
 
 from src.main.exception import FileDoesNotExist
 from src.main.main_class import (read_file, abbr_and_time, Driver, abbr_name_car, init_abb_name_car, add_start_end_time,
-                                 add_lap_time, define_laps_time, print_descending, print_ascending, create,
+                                 add_lap_time, define_laps_time, print_ascending, create,
                                  build_position_list
                                  )
 
@@ -142,4 +141,3 @@ class TestFunc(unittest.TestCase):
                                                  end_time='2018-05-24_12:04:03.332',
                                                  lap_time='0:01:04.415')]), None)
         mock_build_position_list.assert_called_once()
-
