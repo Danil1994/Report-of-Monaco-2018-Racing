@@ -4,7 +4,3 @@ class FileDoesNotExist(FileNotFoundError):
 
 class NotArgument(TypeError):
     pass
-
-
-class NotDriver(NameError):
-    pass
