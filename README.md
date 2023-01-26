@@ -81,7 +81,7 @@ You must use absolute path to the data-folder
 > end_time='2018-05-24_12:14:12.054', 
 > lap_time='0:02:47.987')]
 
-**print_ascending** print ascending order
+**print_order(** print ascending order
 1. Sebastian Vettel  |FERRARI                   |0:01:04.415
 2. Valtteri Bottas   |MERCEDES                  |0:01:12.434
 3. Stoffel Vandoorne |MCLAREN RENAULT           |0:01:12.463

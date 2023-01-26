@@ -27,7 +27,7 @@ drivers = [Driver(abbr='DRR',
 
 class TestParser(unittest.TestCase):
 
-    @patch('src.main.cli.create', return_value=drivers[0])
+    @patch('src.main.cli._create', return_value=drivers[0])
     def test_create_list_object(self, mock_create):
         self.assertEqual(create_list_object('Path/to/the/data'),
                          drivers[0])

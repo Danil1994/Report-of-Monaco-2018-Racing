@@ -18,15 +18,15 @@ class Driver:
         return f"{self.name} {self.car} {self.lap_time}"
 
 
-def read_file(file_name: str) -> list[str]:
+def _read_file(file_name: str) -> list[str]:
     try:
-        with open(file_name, 'r') as file_:
+        with open(file_name, 'r', encoding='utf-8') as file_:
             return file_.readlines()
     except FileNotFoundError:
         raise FileDoesNotExist("Wrong path to the file.")
 
 
-def abbr_name_car(data: list[str]) -> list[list[str]]:
+def _abbr_name_car(data: list[str]) -> list[list[str]]:
     abbr_name_car_list = []
     del_n_symbol = slice(0, -1)
     for line in data:
@@ -34,7 +34,7 @@ def abbr_name_car(data: list[str]) -> list[list[str]]:
     return abbr_name_car_list
 
 
-def abbr_and_time(data: list[str]) -> dict[str, str]:
+def _abbr_and_time(data: list[str]) -> dict[str, str]:
     dict_ = {}
     abbr_slice = slice(3)
     time_slice = slice(3, -1)
@@ -43,7 +43,7 @@ def abbr_and_time(data: list[str]) -> dict[str, str]:
     return dict_
 
 
-def define_laps_time(start_time: str, finish_time: str) -> str:
+def _calculate_laps_time(start_time: str, finish_time: str) -> str:
     time_format = '%Y-%m-%d_%H:%M:%S.%f'
     start_time = datetime.datetime.strptime(start_time, time_format)
     finish_time = datetime.datetime.strptime(finish_time, time_format)
@@ -51,7 +51,7 @@ def define_laps_time(start_time: str, finish_time: str) -> str:
     return str(finish_time - start_time)[time_up_to_three_millisecond]
 
 
-def init_abb_name_car(decoded_list) -> list[Driver]:
+def _init_abb_name_car(decoded_list) -> list[Driver]:
     list_of_drivers = []
     for driver_abbr_name_car in decoded_list:
         list_of_drivers.append(
@@ -59,8 +59,8 @@ def init_abb_name_car(decoded_list) -> list[Driver]:
     return list_of_drivers
 
 
-def add_start_end_time(list_of_drivers: list[Driver], start_info: dict[str, str],
-                       end_info: dict[str, str]) -> list[Driver]:
+def _add_start_end_time(list_of_drivers: list[Driver], start_info: dict[str, str],
+                        end_info: dict[str, str]) -> list[Driver]:
     for driver in list_of_drivers:
         time_value = [start_info[driver.abbr], end_info[driver.abbr]]
         time_value.sort()
@@ -69,35 +69,35 @@ def add_start_end_time(list_of_drivers: list[Driver], start_info: dict[str, str]
     return list_of_drivers
 
 
-def add_lap_time(list_of_drivers: list[Driver]) -> list[Driver]:
+def _add_lap_time(list_of_drivers: list[Driver]) -> list[Driver]:
     list_with_lap_time = list_of_drivers
     for driver in list_with_lap_time:
-        lap_time = define_laps_time(driver.start_time, driver.end_time)
+        lap_time = _calculate_laps_time(driver.start_time, driver.end_time)
         driver.lap_time = lap_time
     return list_with_lap_time
 
 
-def create(start: str, end: str, abbreviations: str) -> list[Driver]:
-    data_about_start = read_file(start)
-    start_info = abbr_and_time(data_about_start)
+def _create(start: str, end: str, abbreviations: str) -> list[Driver]:
+    data_about_start = _read_file(start)
+    start_info = _abbr_and_time(data_about_start)
 
-    data_about_end = read_file(end)
-    end_info = abbr_and_time(data_about_end)
+    data_about_end = _read_file(end)
+    end_info = _abbr_and_time(data_about_end)
 
-    abbreviations_data = read_file(abbreviations)
-    decoded_list = abbr_name_car(abbreviations_data)
+    abbreviations_data = _read_file(abbreviations)
+    decoded_list = _abbr_name_car(abbreviations_data)
 
-    init_list = init_abb_name_car(decoded_list)
-    obj_list_and_time = add_start_end_time(init_list, start_info, end_info)
-    order_list = add_lap_time(obj_list_and_time)
+    init_list = _init_abb_name_car(decoded_list)
+    obj_list_and_time = _add_start_end_time(init_list, start_info, end_info)
+    order_list = _add_lap_time(obj_list_and_time)
     return order_list
 
 
-def build_position_list(order: list[Driver]) -> list[str]:
+def _build_position_list(order: list[Driver]) -> list[str]:
     count = 1
     answer = []
     for obj in order:
-        info = f"{count}.".ljust(3, ' ') + obj.name.ljust(18, ' ') + '|' + obj.car.ljust(26, ' ') + '|' + obj.lap_time
+        info = f"{str(count) + '.':<3} {obj.name:<18} | {obj.car:<26} | {obj.lap_time}"
         answer.append(info)
         count += 1
     line = '-' * 59
@@ -105,16 +105,21 @@ def build_position_list(order: list[Driver]) -> list[str]:
     return answer
 
 
-def sorting(order: list[Driver], asc_desc_command) -> list[str]:
+def _sorting(order: list[Driver]) -> list[str]:
     order.sort(key=lambda x: x.lap_time)
-    order = build_position_list(order)
-    if asc_desc_command == 'desc':
-        order.reverse()
+    order = _build_position_list(order)
     return order
 
 
-def print_report(order: list[Driver], asc_desc_command) -> NoReturn:
-    sorted_order = sorting(order, asc_desc_command)
+def print_ascending(order: list[Driver]) -> NoReturn:
+    sorted_order = _sorting(order)
+    for line in sorted_order:
+        print(line)
+
+
+def print_descending(order: list[Driver]) -> NoReturn:
+    sorted_order = _sorting(order)
+    sorted_order.reverse()
     for line in sorted_order:
         print(line)
 
