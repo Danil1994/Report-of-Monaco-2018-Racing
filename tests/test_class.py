@@ -4,9 +4,9 @@ from unittest.mock import mock_open, patch
 from src.main.exception import FileDoesNotExist
 from src.main.main_class import (Driver, _abbr_and_time, _abbr_name_car,
                                  _add_lap_time, _add_start_end_time,
-                                 _build_position_list, _create, _calculate_laps_time,
+                                 _build_position_list, create, _calculate_laps_time,
                                  find_driver, _init_abb_name_car, print_driver,
-                                 print_ascending, print_descending, _read_file)
+                                 print_ascending, _read_file)
 
 drivers = [Driver(abbr='DRR',
                   name='Daniel Ricciardo',
@@ -125,7 +125,7 @@ class TestFunc(unittest.TestCase):
         mock_read_file.side_effect = ['DRR2018-05-24_12:02:58.917', 'DRR2018-05-24_12:04:03.332',
                                       'DRR_aniel Ricciardo_RED BULL RACING TAG HEUER']
         mock_abbr_and_time.side_effect = [{'DRR': ['2018-05-24_12:02:58.917']}, {'SVF': ['2018-05-24_12:04:03.332']}]
-        self.assertEqual(_create(mock_read_file, mock_read_file, mock_read_file),
+        self.assertEqual(create(mock_read_file, mock_read_file, mock_read_file),
                          [drivers[0]])
         mock_abbr_name_car.assert_called_once()
         mock_init_abb_name_car.assert_called_once()

@@ -81,7 +81,7 @@ You must use absolute path to the data-folder
 > end_time='2018-05-24_12:14:12.054', 
 > lap_time='0:02:47.987')]
 
-**print_order(** print ascending order
+**print_ascending(order)** print ascending order
 1. Sebastian Vettel  |FERRARI                   |0:01:04.415
 2. Valtteri Bottas   |MERCEDES                  |0:01:12.434
 3. Stoffel Vandoorne |MCLAREN RENAULT           |0:01:12.463
@@ -89,9 +89,9 @@ You must use absolute path to the data-folder
 16. Brendon Hartley | SCUDERIA TORO ROSSO HONDA | 1:13.179
 
 
-**print_descending** print descending order
+**print_descending(order)** print descending order
 >'19. Lewis Hamilton    |MERCEDES                  |0:06:47.540'
 >18. Esteban Ocon      |FORCE INDIA MERCEDES      |0:05:46.972
 >...
  
-**print_driver** find info in the report and print it.
+**print_driver(order, driver** find info about driver from the order and print it.

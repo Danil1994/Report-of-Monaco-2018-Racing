@@ -1,6 +1,6 @@
 import datetime
 from dataclasses import dataclass
-from typing import NoReturn, Optional
+from typing import NoReturn, Optional, List, Dict
 
 from .exception import FileDoesNotExist
 
@@ -18,7 +18,7 @@ class Driver:
         return f"{self.name} {self.car} {self.lap_time}"
 
 
-def _read_file(file_name: str) -> list[str]:
+def _read_file(file_name: str) -> List[str]:
     try:
         with open(file_name, 'r', encoding='utf-8') as file_:
             return file_.readlines()
@@ -26,15 +26,15 @@ def _read_file(file_name: str) -> list[str]:
         raise FileDoesNotExist("Wrong path to the file.")
 
 
-def _abbr_name_car(data: list[str]) -> list[list[str]]:
+def _abbr_name_car(data: List[str]) -> List[List[str]]:
     abbr_name_car_list = []
-    del_n_symbol = slice(0, -1)
     for line in data:
-        abbr_name_car_list.append(line[del_n_symbol].split('_'))
+        line = line.strip('\n')
+        abbr_name_car_list.append(line.split('_'))
     return abbr_name_car_list
 
 
-def _abbr_and_time(data: list[str]) -> dict[str, str]:
+def _abbr_and_time(data: List[str]) -> Dict[str, str]:
     dict_ = {}
     abbr_slice = slice(3)
     time_slice = slice(3, -1)
@@ -51,7 +51,7 @@ def _calculate_laps_time(start_time: str, finish_time: str) -> str:
     return str(finish_time - start_time)[time_up_to_three_millisecond]
 
 
-def _init_abb_name_car(decoded_list) -> list[Driver]:
+def _init_abb_name_car(decoded_list) -> List[Driver]:
     list_of_drivers = []
     for driver_abbr_name_car in decoded_list:
         list_of_drivers.append(
@@ -59,8 +59,8 @@ def _init_abb_name_car(decoded_list) -> list[Driver]:
     return list_of_drivers
 
 
-def _add_start_end_time(list_of_drivers: list[Driver], start_info: dict[str, str],
-                        end_info: dict[str, str]) -> list[Driver]:
+def _add_start_end_time(list_of_drivers: List[Driver], start_info: Dict[str, str],
+                        end_info: Dict[str, str]) -> List[Driver]:
     for driver in list_of_drivers:
         time_value = [start_info[driver.abbr], end_info[driver.abbr]]
         time_value.sort()
@@ -69,7 +69,7 @@ def _add_start_end_time(list_of_drivers: list[Driver], start_info: dict[str, str
     return list_of_drivers
 
 
-def _add_lap_time(list_of_drivers: list[Driver]) -> list[Driver]:
+def _add_lap_time(list_of_drivers: List[Driver]) -> List[Driver]:
     list_with_lap_time = list_of_drivers
     for driver in list_with_lap_time:
         lap_time = _calculate_laps_time(driver.start_time, driver.end_time)
@@ -77,7 +77,7 @@ def _add_lap_time(list_of_drivers: list[Driver]) -> list[Driver]:
     return list_with_lap_time
 
 
-def _create(start: str, end: str, abbreviations: str) -> list[Driver]:
+def create(start: str, end: str, abbreviations: str) -> List[Driver]:
     data_about_start = _read_file(start)
     start_info = _abbr_and_time(data_about_start)
 
@@ -93,38 +93,37 @@ def _create(start: str, end: str, abbreviations: str) -> list[Driver]:
     return order_list
 
 
-def _build_position_list(order: list[Driver]) -> list[str]:
-    count = 1
+def _build_position_list(order: List[Driver]) -> List[str]:
     answer = []
-    for obj in order:
-        info = f"{str(count) + '.':<3} {obj.name:<18} | {obj.car:<26} | {obj.lap_time}"
+    for position, obj in enumerate(order, 1):
+        info = f"{str(position) + '.':<3} {obj.name:<18} | {obj.car:<26} | {obj.lap_time}"
         answer.append(info)
-        count += 1
     line = '-' * 59
     answer.insert(15, line)
     return answer
 
 
-def _sorting(order: list[Driver]) -> list[str]:
+def sorting(order: List[Driver]) -> List[Driver]:
     order.sort(key=lambda x: x.lap_time)
-    order = _build_position_list(order)
     return order
 
 
-def print_ascending(order: list[Driver]) -> NoReturn:
-    sorted_order = _sorting(order)
-    for line in sorted_order:
+def print_ascending(order: List[Driver]) -> NoReturn:
+    sorted_order = sorting(order)
+    list_with_position = _build_position_list(sorted_order)
+    for line in list_with_position:
         print(line)
 
 
-def print_descending(order: list[Driver]) -> NoReturn:
-    sorted_order = _sorting(order)
+def print_descending(order: List[Driver]) -> NoReturn:
+    sorted_order = sorting(order)
     sorted_order.reverse()
-    for line in sorted_order:
+    list_with_position = _build_position_list(sorted_order)
+    for line in list_with_position:
         print(line)
 
 
-def find_driver(order: list[Driver], name: str) -> Driver | None:
+def find_driver(order: List[Driver], name: str) -> Driver | None:
     answer = None
     for driver in order:
         if driver.name == name:
@@ -132,7 +131,7 @@ def find_driver(order: list[Driver], name: str) -> Driver | None:
     return answer
 
 
-def print_driver(order: list[Driver], name: str) -> NoReturn:
+def print_driver(order: List[Driver], name: str) -> NoReturn:
     name = name.strip(' ')
     driver = find_driver(order, name)
     print(driver)
