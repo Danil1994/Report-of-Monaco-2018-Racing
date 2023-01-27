@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, List, NoReturn, Optional
+from typing import Dict, List, Optional
 
 from .exception import FileDoesNotExist
 
@@ -108,14 +108,14 @@ def sorting(order: List[Driver]) -> List[Driver]:
     return order
 
 
-def print_ascending(order: List[Driver]) -> NoReturn:
+def print_ascending(order: List[Driver]) -> None:
     sorted_order = sorting(order)
     list_with_position = _build_position_list(sorted_order)
     for line in list_with_position:
         print(line)
 
 
-def print_descending(order: List[Driver]) -> NoReturn:
+def print_descending(order: List[Driver]) -> None:
     sorted_order = sorting(order)
     list_with_position = _build_position_list(sorted_order)
     list_with_position.reverse()
@@ -131,7 +131,7 @@ def find_driver(order: List[Driver], name: str) -> Driver | None:
     return answer
 
 
-def print_driver(order: List[Driver], name: str) -> NoReturn:
+def print_driver(order: List[Driver], name: str) -> None:
     name = name.strip(' ')
     driver = find_driver(order, name)
     print(driver)
