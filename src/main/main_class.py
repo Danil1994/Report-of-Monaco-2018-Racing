@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from dataclasses import dataclass
 from typing import NoReturn, Optional, List, Dict
 
@@ -45,8 +45,8 @@ def _abbr_and_time(data: List[str]) -> Dict[str, str]:
 
 def _calculate_laps_time(start_time: str, finish_time: str) -> str:
     time_format = '%Y-%m-%d_%H:%M:%S.%f'
-    start_time = datetime.datetime.strptime(start_time, time_format)
-    finish_time = datetime.datetime.strptime(finish_time, time_format)
+    start_time = datetime.strptime(start_time, time_format)
+    finish_time = datetime.strptime(finish_time, time_format)
     time_up_to_three_millisecond = slice(11)
     return str(finish_time - start_time)[time_up_to_three_millisecond]
 
