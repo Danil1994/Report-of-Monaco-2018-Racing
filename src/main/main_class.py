@@ -1,6 +1,6 @@
-from datetime import datetime
 from dataclasses import dataclass
-from typing import NoReturn, Optional, List, Dict
+from datetime import datetime
+from typing import Dict, List, NoReturn, Optional
 
 from .exception import FileDoesNotExist
 
@@ -72,7 +72,7 @@ def _add_start_end_time(list_of_drivers: List[Driver], start_info: Dict[str, str
 def _add_lap_time(list_of_drivers: List[Driver]) -> List[Driver]:
     list_with_lap_time = list_of_drivers
     for driver in list_with_lap_time:
-        lap_time = _calculate_laps_time(driver.start_time, driver.end_time)
+        lap_time = _calculate_laps_time(str(driver.start_time), str(driver.end_time))
         driver.lap_time = lap_time
     return list_with_lap_time
 
@@ -117,8 +117,8 @@ def print_ascending(order: List[Driver]) -> NoReturn:
 
 def print_descending(order: List[Driver]) -> NoReturn:
     sorted_order = sorting(order)
-    sorted_order.reverse()
     list_with_position = _build_position_list(sorted_order)
+    list_with_position.reverse()
     for line in list_with_position:
         print(line)
 

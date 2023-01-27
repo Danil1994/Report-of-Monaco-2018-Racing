@@ -1,5 +1,5 @@
 from src.main.cli import create_list_object, parser
-from src.main.main_class import print_driver, print_ascending, print_descending
+from src.main.main_class import print_ascending, print_descending, print_driver
 
 if __name__ == '__main__':
     cli_command = parser()

@@ -1,27 +1,29 @@
 import argparse
 import unittest
+from datetime import datetime
 from unittest.mock import patch
 
 from src.main.cli import create_list_object, parser
 from src.main.main_class import Driver
 
+time_format = '%Y-%m-%d_%H:%M:%S.%f'
 drivers = [Driver(abbr='DRR',
                   name='Daniel Ricciardo',
                   car='RED BULL RACING TAG HEUER',
-                  start_time='2018-05-24_12:02:58.917',
-                  end_time='2018-05-24_12:04:03.332',
+                  start_time=datetime.strptime('2018-05-24_12:02:58.917', time_format),
+                  end_time=datetime.strptime('2018-05-24_12:04:03.332', time_format),
                   lap_time='0:01:04.415'),
            Driver(abbr='SVF',
                   name='Sebastian Vettel',
                   car='FERRARI',
-                  start_time='2018-05-24_12:02:58.917',
-                  end_time='2018-05-24_12:04:03.332',
+                  start_time=datetime.strptime('2018-05-24_12:02:58.917', time_format),
+                  end_time=datetime.strptime('2018-05-24_12:04:03.332', time_format),
                   lap_time='0:01:04.415'),
            Driver(abbr='LHM',
                   name='Lewis Hamilton',
                   car='MERCEDES',
-                  start_time='2018-05-24_12:11:32.585',
-                  end_time='2018-05-24_12:18:20.125',
+                  start_time=datetime.strptime('2018-05-24_12:11:32.585', time_format),
+                  end_time=datetime.strptime('2018-05-24_12:18:20.125', time_format),
                   lap_time='0:06:47.540')]
 
 

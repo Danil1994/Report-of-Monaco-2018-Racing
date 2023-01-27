@@ -1,30 +1,32 @@
 import unittest
+from datetime import datetime
 from unittest.mock import mock_open, patch
 
 from src.main.exception import FileDoesNotExist
 from src.main.main_class import (Driver, _abbr_and_time, _abbr_name_car,
                                  _add_lap_time, _add_start_end_time,
-                                 _build_position_list, create, _calculate_laps_time,
-                                 find_driver, _init_abb_name_car, print_driver,
-                                 print_ascending, _read_file)
+                                 _build_position_list, _calculate_laps_time,
+                                 _init_abb_name_car, _read_file, create,
+                                 find_driver, print_ascending, print_driver)
 
+time_format = '%Y-%m-%d_%H:%M:%S.%f'
 drivers = [Driver(abbr='DRR',
                   name='Daniel Ricciardo',
                   car='RED BULL RACING TAG HEUER',
-                  start_time='2018-05-24_12:02:58.917',
-                  end_time='2018-05-24_12:04:03.332',
+                  start_time=datetime.strptime('2018-05-24_12:02:58.917', time_format),
+                  end_time=datetime.strptime('2018-05-24_12:04:03.332', time_format),
                   lap_time='0:01:04.415'),
            Driver(abbr='SVF',
                   name='Sebastian Vettel',
                   car='FERRARI',
-                  start_time='2018-05-24_12:02:58.917',
-                  end_time='2018-05-24_12:04:03.332',
+                  start_time=datetime.strptime('2018-05-24_12:02:58.917', time_format),
+                  end_time=datetime.strptime('2018-05-24_12:04:03.332', time_format),
                   lap_time='0:01:04.415'),
            Driver(abbr='LHM',
                   name='Lewis Hamilton',
                   car='MERCEDES',
-                  start_time='2018-05-24_12:11:32.585',
-                  end_time='2018-05-24_12:18:20.125',
+                  start_time=datetime.strptime('2018-05-24_12:11:32.585', time_format),
+                  end_time=datetime.strptime('2018-05-24_12:18:20.125', time_format),
                   lap_time='0:06:47.540')]
 
 
@@ -91,8 +93,8 @@ class TestFunc(unittest.TestCase):
         driver = [Driver(abbr='DRR',
                          name='Daniel Ricciardo',
                          car='RED BULL RACING TAG HEUER',
-                         start_time='2018-05-24_12:02:58.917',
-                         end_time='2018-05-24_12:04:03.332',
+                         start_time=datetime.strptime('2018-05-24_12:02:58.917', time_format),
+                         end_time=datetime.strptime('2018-05-24_12:04:03.332', time_format),
                          lap_time=None)]
         self.assertEqual(_add_lap_time(driver), [drivers[0]])
         mock_lap_time.assert_called_once()
@@ -110,14 +112,18 @@ class TestFunc(unittest.TestCase):
     @patch('src.main.main_class._add_start_end_time', return_value=[Driver(abbr='DRR',
                                                                            name='Daniel Ricciardo',
                                                                            car='RED BULL RACING TAG HEUER',
-                                                                           start_time='2018-05-24_12:02:58.917',
-                                                                           end_time='2018-05-24_12:04:03.332',
+                                                                           start_time=datetime.strptime(
+                                                                               '2018-05-24_12:02:58.917', time_format),
+                                                                           end_time=datetime.strptime(
+                                                                               '2018-05-24_12:04:03.332', time_format),
                                                                            lap_time=None)])
     @patch('src.main.main_class._add_lap_time', return_value=[Driver(abbr='DRR',
                                                                      name='Daniel Ricciardo',
                                                                      car='RED BULL RACING TAG HEUER',
-                                                                     start_time='2018-05-24_12:02:58.917',
-                                                                     end_time='2018-05-24_12:04:03.332',
+                                                                     start_time=datetime.strptime(
+                                                                         '2018-05-24_12:02:58.917', time_format),
+                                                                     end_time=datetime.strptime(
+                                                                         '2018-05-24_12:04:03.332', time_format),
                                                                      lap_time='0:01:04.415')])
     def test_create(self, mock_add_lap_time, mock_add_start_end_time, mock_init_abb_name_car, mock_abbr_name_car,
                     mock_abbr_and_time,
@@ -153,8 +159,8 @@ class TestFunc(unittest.TestCase):
                          Driver(abbr='DRR',
                                 name='Daniel Ricciardo',
                                 car='RED BULL RACING TAG HEUER',
-                                start_time='2018-05-24_12:02:58.917',
-                                end_time='2018-05-24_12:04:03.332',
+                                start_time=datetime.strptime('2018-05-24_12:02:58.917', time_format),
+                                end_time=datetime.strptime('2018-05-24_12:04:03.332', time_format),
                                 lap_time='0:01:04.415')
                          )
 
